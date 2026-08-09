@@ -3,16 +3,14 @@
     "configurations": [
         {
             "name": "Build & Run SalonSystem",
-            "type": "cppdbg",
+            "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}${pathSeparator}SalonSystem.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": true,
-            "MIMode": "gdb",
-            "miDebuggerPath": "C:\\msys64\\ucrt64\\bin\\gdb.exe",
+            "console": "externalTerminal",
             "preLaunchTask": "Build SalonSystem (g++)"
         }
     ]

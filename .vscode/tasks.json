@@ -7,7 +7,7 @@
             "args": [
                 "-std=c++11",
                 "-Wall",
-                "-g",
+                "-static",
                 "-o",
                 "${workspaceFolder}${pathSeparator}SalonSystem.exe",
                 "${workspaceFolder}${pathSeparator}main.cpp",
