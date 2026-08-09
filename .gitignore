@@ -1,0 +1,15 @@
+*.exe
+*.obj
+*.pdb
+*.ilk
+*.idb
+data_*.txt
+*_report_*.txt
+customer_list_*.txt
+stylist_list_*.txt
+service_list_*.txt
+schedule_*.txt
+service_ranking_*.txt
+*.log
+out/
+.vs/

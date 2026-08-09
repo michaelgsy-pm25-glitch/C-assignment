@@ -1,0 +1,35 @@
+{
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Build SalonSystem (g++)",
+            "command": "g++",
+            "args": [
+                "-std=c++11",
+                "-Wall",
+                "-g",
+                "-o",
+                "${workspaceFolder}${pathSeparator}SalonSystem.exe",
+                "${workspaceFolder}${pathSeparator}main.cpp",
+                "${workspaceFolder}${pathSeparator}customer.cpp",
+                "${workspaceFolder}${pathSeparator}stylist_service.cpp",
+                "${workspaceFolder}${pathSeparator}booking.cpp",
+                "${workspaceFolder}${pathSeparator}billing.cpp",
+                "${workspaceFolder}${pathSeparator}utils.cpp",
+                "${workspaceFolder}${pathSeparator}persistence.cpp"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Build all 7 .cpp files with g++"
+        }
+    ],
+    "version": "2.0.0"
+}
