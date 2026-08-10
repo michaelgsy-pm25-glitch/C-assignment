@@ -52,44 +52,8 @@ void bookAppointment(vector<Booking> &bookings, int &nextBookingID,
     clearScreen();
     printHeader("BOOK APPOINTMENT");
 
-    // ---- Step 1: Customer ----
-    cout << left << setw(6) << "ID" << setw(20) << "Name" << setw(14) << "Phone" << "\n";
-    printDivider('-', 40);
-    for (const Customer &c : customers)
-        if (c.isActive) cout << left << setw(6) << c.customerID << setw(20) << c.name << setw(14) << c.phone << "\n";
-    printDivider('-', 40);
-    int custID = getValidatedInt("\nEnter Customer ID (or 0 to cancel): ", 0, 999999);
-    if (custID == 0) { cout << "\nBooking cancelled.\n"; pauseScreen(); return; }
-    if (findCustomerIndex(customers, custID) == -1) {
-        cout << "\nCustomer not found. Please add the customer first (Customer Management).\n";
-        pauseScreen();
-        return;
-    }
-
-    // ---- Step 2: Stylist ----
-    cout << "\n--- Available Stylists ---\n";
-    bool anyStylist = false;
-    for (const Stylist &s : stylists) {
-        if (s.isActive && s.isAvailable) {
-            cout << "  " << s.stylistID << ". " << s.name << " (" << s.specialization << ")\n";
-            anyStylist = true;
-        }
-    }
-    if (!anyStylist) {
-        cout << "No stylists are currently available. Please try again later.\n";
-        pauseScreen();
-        return;
-    }
-    int stylistID = getValidatedInt("Enter Stylist ID: ", 1, 999999);
-    int sIdx = findStylistIndex(stylists, stylistID);
-    if (sIdx == -1 || !stylists[sIdx].isAvailable) {
-        cout << "\nInvalid or unavailable stylist.\n";
-        pauseScreen();
-        return;
-    }
-
-    // ---- Step 3: Service(s) ----
-    cout << "\n--- Active Services ---\n";
+    // ---- Step 1: Service(s) ----
+    cout << "--- Active Services ---\n";
     for (const Service &sv : services) {
         if (sv.isActive) {
             cout << "  " << sv.serviceID << ". " << sv.serviceName
@@ -101,7 +65,8 @@ void bookAppointment(vector<Booking> &bookings, int &nextBookingID,
     b.numServices = 0;
     char more = 'Y';
     while (more == 'Y' && b.numServices < MAX_SERVICES_PER_BOOKING) {
-        int svID = getValidatedInt("Enter Service ID to add: ", 1, 999999);
+        int svID = getValidatedInt("Enter Service ID to add (or 0 to finish): ", 0, 999999);
+        if (svID == 0) break;
         int svIdx = findServiceIndex(services, svID);
         if (svIdx == -1) {
             cout << "Service not found. Try again.\n";
@@ -116,9 +81,59 @@ void bookAppointment(vector<Booking> &bookings, int &nextBookingID,
         }
     }
     if (b.numServices == 0) {
-        cout << "\nNo valid service selected. Booking cancelled.\n";
+        cout << "\nNo service selected. Booking cancelled.\n";
         pauseScreen();
         return;
+    }
+
+    // ---- Step 2: Customer ----
+    cout << "\n--- Customers ---\n";
+    cout << left << setw(6) << "ID" << setw(20) << "Name" << setw(14) << "Phone" << "\n";
+    printDivider('-', 40);
+    for (const Customer &c : customers)
+        if (c.isActive) cout << left << setw(6) << c.customerID << setw(20) << c.name << setw(14) << c.phone << "\n";
+    printDivider('-', 40);
+    int custID = getValidatedInt("\nEnter Customer ID (or 0 to cancel): ", 0, 999999);
+    if (custID == 0) { cout << "\nBooking cancelled.\n"; pauseScreen(); return; }
+    if (findCustomerIndex(customers, custID) == -1) {
+        cout << "\nCustomer not found. Please add the customer first (Customer Management).\n";
+        pauseScreen();
+        return;
+    }
+
+    // ---- Step 3: Stylist ----
+    cout << "\n--- Available Stylists ---\n";
+    int availCount = 0;
+    for (const Stylist &s : stylists) {
+        if (s.isActive && s.isAvailable) {
+            cout << "  " << s.stylistID << ". " << s.name << " (" << s.specialization << ")\n";
+            availCount++;
+        }
+    }
+    if (availCount == 0) {
+        cout << "No stylists are currently available. Please try again later.\n";
+        pauseScreen();
+        return;
+    }
+
+    int stylistID = getValidatedInt("Enter Stylist ID (or 0 for auto-assign): ", 0, 999999);
+    int sIdx;
+    if (stylistID == 0) {
+        for (const Stylist &s : stylists) {
+            if (s.isActive && s.isAvailable) {
+                stylistID = s.stylistID;
+                break;
+            }
+        }
+        sIdx = findStylistIndex(stylists, stylistID);
+        cout << "\nAuto-assigned: " << stylists[sIdx].name << "\n";
+    } else {
+        sIdx = findStylistIndex(stylists, stylistID);
+        if (sIdx == -1 || !stylists[sIdx].isAvailable) {
+            cout << "\nInvalid or unavailable stylist.\n";
+            pauseScreen();
+            return;
+        }
     }
 
     // ---- Step 4: Date & Time ----
