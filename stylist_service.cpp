@@ -33,6 +33,18 @@ double getServicePrice(const vector<Service> &services, int serviceID) {
     return (idx == -1) ? 0.0 : services[idx].price;
 }
 
+bool canStylistDoService(const Stylist &stylist, const string &serviceCategory) {
+    if (serviceCategory == "Hair")
+        return stylist.specialization == "Hair Styling" || stylist.specialization == "Colouring";
+    if (serviceCategory == "Nail")
+        return stylist.specialization == "Nail Care";
+    if (serviceCategory == "Spa")
+        return stylist.specialization == "Spa & Massage";
+    if (serviceCategory == "Makeup")
+        return stylist.specialization == "Makeup";
+    return true;
+}
+
 // ============================ STYLIST FUNCTIONS ============================
 static string chooseSpecialization() {
     cout << "Specialization:\n  1. Hair Styling\n  2. Colouring\n  3. Nail Care\n  4. Spa & Massage\n  5. Makeup\n";

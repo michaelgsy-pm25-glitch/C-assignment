@@ -20,6 +20,8 @@ void bookAppointment(vector<Booking> &bookings, int &nextBookingID,
                       const vector<Stylist> &stylists,
                       const vector<Service> &services);
 void viewSearchAppointment(const vector<Booking> &bookings, const vector<Customer> &customers);
+void viewBookingDetail(const vector<Booking> &bookings, const vector<Customer> &customers,
+                       const vector<Stylist> &stylists, const vector<Service> &services);
 void cancelAppointment(vector<Booking> &bookings);
 void updateAppointment(vector<Booking> &bookings, const vector<Stylist> &stylists, const vector<Service> &services);
 void viewTodaySchedule(const vector<Booking> &bookings, const vector<Stylist> &stylists, const vector<Customer> &customers);

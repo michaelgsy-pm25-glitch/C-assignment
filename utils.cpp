@@ -266,3 +266,8 @@ void setProgramDir(const string &argv0) {
 string getProgramDir() {
     return g_programDir;
 }
+
+string truncate(const string &s, int maxLen) {
+    if ((int)s.size() <= maxLen) return s;
+    return s.substr(0, maxLen - 2) + "..";
+}

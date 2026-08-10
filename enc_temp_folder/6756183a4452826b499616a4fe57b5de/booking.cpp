@@ -164,22 +164,18 @@ void bookAppointment(vector<Booking> &bookings, int &nextBookingID,
     printDivider('=');
     cout << "Booking ID   : " << b.bookingID << "\n";
     cout << "Customer ID  : " << b.customerID << "\n";
-    cout << "Stylist      : " << stylists[sIdx].name << " (" << stylists[sIdx].specialization << ")\n";
+    cout << "Stylist      : " << stylists[sIdx].name << "\n";
     cout << "Service(s)   : ";
-    double totalPrice = 0; int totalDuration = 0;
+    double totalPrice = 0;
     for (int i = 0; i < b.numServices; i++) {
         int svIdx = findServiceIndex(services, b.serviceIDs[i]);
         cout << services[svIdx].serviceName;
         totalPrice += services[svIdx].price;
-        totalDuration += services[svIdx].duration;
         if (i < b.numServices - 1) cout << ", ";
     }
     cout << "\nDate & Time  : " << b.date << " " << b.timeSlot << "\n";
-    cout << "Duration     : " << totalDuration << " min";
-    if (totalDuration >= 60) cout << " (~" << fixed << setprecision(1) << (totalDuration / 60.0) << " hrs)";
-    cout << "\n";
     cout << fixed << setprecision(2);
-    cout << "Est. Cost    : RM" << totalPrice << " (before tax/discount)\n";
+    cout << "Estimated Bill: RM" << totalPrice << " (before tax/discount)\n";
     cout << "Status       : " << b.status << "\n";
     printDivider('=');
     pauseScreen();
@@ -226,54 +222,6 @@ void viewSearchAppointment(const vector<Booking> &bookings, const vector<Custome
     cout << "Total appointment(s): " << count << "\n";
     pauseScreen();
     (void)customers; // reserved for a future "show customer name" enhancement
-}
-
-void viewBookingDetail(const vector<Booking> &bookings, const vector<Customer> &customers,
-                        const vector<Stylist> &stylists, const vector<Service> &services) {
-    clearScreen();
-    printHeader("BOOKING DETAIL");
-    int id = getValidatedInt("Enter Booking ID (or 0 to cancel): ", 0, 999999);
-    if (id == 0) { cout << "\nCancelled.\n"; pauseScreen(); return; }
-    int idx = findBookingIndex(bookings, id);
-    if (idx == -1) { cout << "\nBooking not found.\n"; pauseScreen(); return; }
-
-    const Booking &b = bookings[idx];
-    int cIdx = findCustomerIndex(customers, b.customerID);
-    int sIdx = findStylistIndex(stylists, b.stylistID);
-
-    cout << fixed << setprecision(2);
-    cout << "\n";
-    printDivider('=', 45);
-    cout << "               BOOKING DETAILS\n";
-    printDivider('=', 45);
-    cout << left << setw(18) << "Booking ID:" << b.bookingID << "\n";
-    cout << left << setw(18) << "Status:" << b.status << "\n";
-    cout << left << setw(18) << "Customer:"
-         << (cIdx != -1 ? customers[cIdx].name : "ID " + to_string(b.customerID)) << "\n";
-    if (cIdx != -1) cout << left << setw(18) << "  Phone:" << customers[cIdx].phone << "\n";
-    cout << left << setw(18) << "Stylist:"
-         << (sIdx != -1 ? stylists[sIdx].name : "ID " + to_string(b.stylistID)) << "\n";
-    if (sIdx != -1) cout << left << setw(18) << "  Specialization:" << stylists[sIdx].specialization << "\n";
-    cout << left << setw(18) << "Date & Time:" << b.date << " " << b.timeSlot << "\n";
-    printDivider('-', 45);
-    cout << "Services:\n";
-    double totalPrice = 0; int totalDuration = 0;
-    for (int i = 0; i < b.numServices; i++) {
-        int svIdx = findServiceIndex(services, b.serviceIDs[i]);
-        string name = (svIdx != -1) ? services[svIdx].serviceName : "Unknown";
-        double pr = (svIdx != -1) ? services[svIdx].price : 0;
-        int dur = (svIdx != -1) ? services[svIdx].duration : 0;
-        cout << "  " << (i + 1) << ". " << left << setw(26) << name
-             << "RM" << setw(8) << pr << dur << " min\n";
-        totalPrice += pr;
-        totalDuration += dur;
-    }
-    printDivider('-', 45);
-    cout << left << setw(26) << "Estimated Cost:" << "RM" << totalPrice << "\n";
-    cout << left << setw(26) << "Total Duration:" << totalDuration << " min (~"
-         << fixed << setprecision(1) << (totalDuration / 60.0) << " hrs)\n";
-    printDivider('=', 45);
-    pauseScreen();
 }
 
 void cancelAppointment(vector<Booking> &bookings) {
@@ -413,7 +361,7 @@ void viewTodaySchedule(const vector<Booking> &bookings, const vector<Stylist> &s
     out << "\n" << string(16 + 12 * NUM_TIME_SLOTS, '-') << "\n";
 
     for (int r = 0; r < numRows; r++) {
-        out << left << setw(16) << truncate(stylists[stylistRow[r]].name, 14);
+        out << left << setw(16) << stylists[stylistRow[r]].name;
         for (int t = 0; t < NUM_TIME_SLOTS; t++) out << setw(12) << grid[r][t];
         out << "\n";
     }
@@ -438,32 +386,18 @@ void bookingManagementMenu(vector<Booking> &bookings, int &nextBookingID,
         printHeader("BOOKING MANAGEMENT");
         cout << "1. Book Appointment\n";
         cout << "2. View / Search Appointments\n";
-        cout << "3. Booking Detail\n";
-        cout << "4. Cancel Appointment\n";
-        cout << "5. Update Appointment\n";
-        cout << "6. View Today's Schedule\n";
+        cout << "3. Cancel Appointment\n";
+        cout << "4. Update Appointment\n";
+        cout << "5. View Today's Schedule\n";
         cout << "0. Back to Main Menu\n";
-
-        string today = getTodayDate();
-        int confirmed = 0, completed = 0, cancelled = 0;
-        for (const Booking &b : bookings) {
-            if (b.date == today && b.status == "Confirmed") confirmed++;
-            if (b.date == today && b.status == "Completed") completed++;
-            if (b.date == today && b.status == "Cancelled") cancelled++;
-        }
-        cout << "\n  Today (" << today << "): "
-             << confirmed << " Confirmed  |  " << completed << " Completed  |  "
-             << cancelled << " Cancelled\n";
-
-        choice = getValidatedInt("Enter your choice: ", 0, 6);
+        choice = getValidatedInt("Enter your choice: ", 0, 5);
 
         switch (choice) {
             case 1: bookAppointment(bookings, nextBookingID, customers, stylists, services); break;
             case 2: viewSearchAppointment(bookings, customers); break;
-            case 3: viewBookingDetail(bookings, customers, stylists, services); break;
-            case 4: cancelAppointment(bookings); break;
-            case 5: updateAppointment(bookings, stylists, services); break;
-            case 6: viewTodaySchedule(bookings, stylists, customers); break;
+            case 3: cancelAppointment(bookings); break;
+            case 4: updateAppointment(bookings, stylists, services); break;
+            case 5: viewTodaySchedule(bookings, stylists, customers); break;
             case 0: break;
         }
     } while (choice != 0);

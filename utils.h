@@ -19,6 +19,7 @@ void pauseScreen();
 void printDivider(char ch = '-', int length = 65);
 void printHeader(const string &title);
 void exportToFile(const string &prefix, const string &content);
+string truncate(const string &s, int maxLen);
 
 // ---- Validated input (loops until the user gives acceptable input) ----
 int    getValidatedInt(const string &prompt, int minVal, int maxVal);

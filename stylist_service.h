@@ -31,5 +31,6 @@ int    findStylistIndex(const vector<Stylist> &stylists, int stylistID);
 int    findServiceIndex(const vector<Service> &services, int serviceID);
 string getServiceName(const vector<Service> &services, int serviceID);
 double getServicePrice(const vector<Service> &services, int serviceID);
+bool   canStylistDoService(const Stylist &stylist, const string &serviceCategory);
 
 #endif
