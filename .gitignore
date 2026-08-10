@@ -13,3 +13,4 @@ service_ranking_*.txt
 *.log
 out/
 .vs/
+enc_temp_folder/
