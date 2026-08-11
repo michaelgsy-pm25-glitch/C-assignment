@@ -10,8 +10,10 @@
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "console": "externalTerminal",
-            "preLaunchTask": "Build SalonSystem (g++)"
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "miDebuggerPath": "gdb",
+            "preLaunchTask": "Build SalonSystem"
         }
     ]
 }
