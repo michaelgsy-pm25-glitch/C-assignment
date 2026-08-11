@@ -385,8 +385,9 @@ void addCustomer(vector<Customer> &customers, int &nextCustomerID) {
 void searchCustomer(const vector<Customer> &customers) {
     clearScreen();
     printHeader("SEARCH CUSTOMER");
-    cout << "1. Search by Customer ID\n2. Search by Name\n";
-    int mode = getValidatedInt("Choice: ", 1, 2);
+    cout << "1. Search by Customer ID\n2. Search by Name\n0. Back\n";
+    int mode = getValidatedInt("Choice: ", 0, 2);
+    if (mode == 0) return;
 
     bool found = false;
 
@@ -405,8 +406,9 @@ void searchCustomer(const vector<Customer> &customers) {
         }
     } else {
         string keyword;
-        cout << "Enter name (or part of name): ";
+        cout << "Enter name or keyword (or Enter to cancel): ";
         getline(cin, keyword);
+        if (keyword.empty()) { cout << "\nCancelled.\n"; pauseScreen(); return; }
         string keyLower = keyword;
         for (char &ch : keyLower) ch = tolower((unsigned char)ch);
 
@@ -1203,8 +1205,9 @@ void bookAppointment(vector<Booking> &bookings, int &nextBookingID,
 void viewSearchAppointment(const vector<Booking> &bookings, const vector<Customer> &customers) {
     clearScreen();
     printHeader("VIEW / SEARCH APPOINTMENTS");
-    cout << "1. View All Appointments\n2. Search by Booking ID\n3. Search by Customer ID\n4. Search by Date\n";
-    int mode = getValidatedInt("Choice: ", 1, 4);
+    cout << "1. View All Appointments\n2. Search by Booking ID\n3. Search by Customer ID\n4. Search by Date\n0. Back\n";
+    int mode = getValidatedInt("Choice: ", 0, 4);
+    if (mode == 0) return;
 
     int filterID = -1;
     string filterDate;
