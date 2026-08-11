@@ -6,12 +6,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(SalonSystem
     main.cpp
-    customer.cpp
-    stylist_service.cpp
-    booking.cpp
-    billing.cpp
-    utils.cpp
-    persistence.cpp
 )
 
 if(MSVC)
