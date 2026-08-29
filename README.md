@@ -53,30 +53,3 @@ and invalid-input handling) with zero warnings under `-Wall`.
 3. **File Persistence** — all data (customers, stylists, services, bookings,
    invoices, ID counters) is saved to text files on exit and automatically
    loaded on next startup. Use menu option 5 to save at any time.
-
-## Design Notes (useful for your report / viva)
-
-- **Soft deletes**: "deleting" a customer, stylist, or service just flips
-  an `isActive` flag rather than erasing the row. Past bookings/invoices
-  still reference that ID, so this keeps history intact instead of
-  corrupting it — worth mentioning if you're asked why.
-- **Cross-module data sharing**: Booking validates customers/stylists/
-  services by calling into Modules 1 & 2's lookup functions; Billing pulls
-  prices from Module 2, booking data from Module 3, and updates loyalty
-  points in Module 1 when a payment is recorded. This is the "correct
-  interaction & data sharing between modules" the spec asks for.
-- **Sample starter data** (2 customers, 3 stylists, 5 services) preloads on
-  launch so you can demo Booking/Billing immediately without manual setup.
-- **File persistence is now implemented** — all data is saved to
-  pipe-delimited text files (`data_*.txt`). Data loads automatically on
-  startup and saves on exit. Menu option 5 also triggers a manual save.
-- **Currency/tax**: RM currency, 6% SST, matching Malaysian context.
-
-## For the Presentation
-
-Your rubric has each of you individually defending your own module in a
-live Q&A, and marks are reduced if you can't explain your own code — so
-before Week 12, actually read through your file end to end (everything is
-commented fairly heavily to make that easier) and try changing something
-small and re-running it, so you're not seeing it for the first time on
-stage.
